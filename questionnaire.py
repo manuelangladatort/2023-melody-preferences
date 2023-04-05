@@ -1,8 +1,8 @@
+import random
 from dominate import tags
 
 from psynet.demography.general import Age, Gender
 from psynet.demography.gmsi import GMSI
-from psynet.demography.pei import PEI
 from psynet.modular_page import ModularPage, TextControl, SurveyJSControl
 from psynet.page import InfoPage
 from psynet.timeline import join
@@ -26,7 +26,6 @@ def questionnaire():
         introduction(),
         Age(),
         Gender(),
-        PEI(),
         GMSI(subscales=["Musical Training"]),
         feedback(),
     )
@@ -262,15 +261,6 @@ def STOMPR():
                                     "name": "Soundtracks",
                                     "isRequired": True,
                                     "title": "Please indicate your preference for Soundtracks/theme song music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Jazz",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Jazz music:",
                                     "rateValues": rating_values,
                                     "minRateDescription": "Dislike Strongly",
                                     "maxRateDescription": "Like Strongly",

@@ -23,8 +23,7 @@ from .volume_calibration import volume_calibration
 
 # TODO:
 ## 1. long loading time with 25000 melodies
-## 2. gold-msi error
-## 4. consistency
+## 4. add consistency message
 ## 5. add in github
 
 
@@ -191,7 +190,6 @@ class Exp(psynet.experiment.Experiment):
             "Next, we would like to ask you some questions about your music preferneces",
             time_estimate=3,
         ),
-        STOMPR(),
         volume_calibration(TIMBRE, note_duration_tonejs, note_silence_tonejs),
         InfoPage(
             """
@@ -203,22 +201,22 @@ class Exp(psynet.experiment.Experiment):
         ),
         # AntiphaseHeadphoneTest(),
         instructions(),
-        RatingTrialMaker(
-            id_="rating_main_experiment",
-            trial_class=RatingTrial,
-            nodes=nodes,
-            expected_trials_per_participant=TRIALS_PER_PARTICIPANT,
-            max_trials_per_participant=TRIALS_PER_PARTICIPANT,
-            recruit_mode="n_participants",
-            allow_repeated_nodes=False,
-            n_repeat_trials=N_REPEAT_TRIALS,
-            balance_across_nodes=True,
-            target_n_participants=50,
-            check_performance_at_end=False,
-        ),
-        # TODO: add big five + STOMP-R + Golds-MSI
-        # GMSI throws an error
+        # RatingTrialMaker(
+        #     id_="rating_main_experiment",
+        #     trial_class=RatingTrial,
+        #     nodes=nodes,
+        #     expected_trials_per_participant=TRIALS_PER_PARTICIPANT,
+        #     max_trials_per_participant=TRIALS_PER_PARTICIPANT,
+        #     recruit_mode="n_participants",
+        #     allow_repeated_nodes=False,
+        #     n_repeat_trials=N_REPEAT_TRIALS,
+        #     balance_across_nodes=True,
+        #     target_n_participants=50,
+        #     check_performance_at_end=False,
+        # ),
+        # TODO: add big five
         questionnaire(),
+        STOMPR(),
         # debrief(),
         SuccessfulEndPage(),
     )
