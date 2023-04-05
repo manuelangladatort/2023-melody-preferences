@@ -24,14 +24,13 @@ from .volume_calibration import volume_calibration
 # TODO:
 ## 1. long loading time with 25000 melodies
 ## 4. add consistency message
-## 5. add in github
 
 
 ##########################################################################################
 # Global
 ##########################################################################################
-TRIALS_PER_PARTICIPANT = 5
-N_REPEAT_TRIALS = 3
+TRIALS_PER_PARTICIPANT = 50
+N_REPEAT_TRIALS = 6
 INITIAL_RECRUIT_SIZE = 20
 
 roving_width = 2.5
@@ -199,22 +198,21 @@ class Exp(psynet.experiment.Experiment):
             """,
             time_estimate=5,
         ),
-        # AntiphaseHeadphoneTest(),
+        AntiphaseHeadphoneTest(),
         instructions(),
-        # RatingTrialMaker(
-        #     id_="rating_main_experiment",
-        #     trial_class=RatingTrial,
-        #     nodes=nodes,
-        #     expected_trials_per_participant=TRIALS_PER_PARTICIPANT,
-        #     max_trials_per_participant=TRIALS_PER_PARTICIPANT,
-        #     recruit_mode="n_participants",
-        #     allow_repeated_nodes=False,
-        #     n_repeat_trials=N_REPEAT_TRIALS,
-        #     balance_across_nodes=True,
-        #     target_n_participants=50,
-        #     check_performance_at_end=False,
-        # ),
-        # TODO: add big five
+        RatingTrialMaker(
+            id_="rating_main_experiment",
+            trial_class=RatingTrial,
+            nodes=nodes,
+            expected_trials_per_participant=TRIALS_PER_PARTICIPANT,
+            max_trials_per_participant=TRIALS_PER_PARTICIPANT,
+            recruit_mode="n_participants",
+            allow_repeated_nodes=False,
+            n_repeat_trials=N_REPEAT_TRIALS,
+            balance_across_nodes=True,
+            target_n_participants=50,
+            check_performance_at_end=False,
+        ),
         questionnaire(),
         STOMPR(),
         # debrief(),
