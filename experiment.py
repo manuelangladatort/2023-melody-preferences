@@ -57,7 +57,7 @@ TIMBRE = dict(
 # Stimuli
 ##########################################################################################
 # Set the size and range of the grid for the stimulus space
-grid_size = 10  # 50
+grid_size = 50
 grid_range = 12
 
 # Here we define the stimulus set in an analogous way to the static_audio demo,
