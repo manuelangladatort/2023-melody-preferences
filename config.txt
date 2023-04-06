@@ -1,5 +1,5 @@
 [Payment information]
-title = Melody experiment
+title = Rating melodies (bonus up to 1.50 US dollars for 9 min!). Headphones required!
 base_payment = 0.10
 
 [Recruitment strategy]
@@ -7,14 +7,16 @@ auto_recruit = true
 lifetime = 24
 duration = 2
 us_only = true
-approve_requirement = 95
+approve_requirement = 99
+qualification_blacklist = cap-usr-list, melcon_batch1,melcon_batch2
+mturk_qualification_requirements = file:mturk_qualification.json
 ad_group = Game
 disable_when_duration_exceeded = False
 
 [Ad metadata]
-description = Melody experiment (listen and rate melodies).
-keywords = monitor
-contact_email_on_error = computational.audition+online_running@gmail.com
+description = Headphones are required! You will hear sounds and be asked to rate them. The bonus for the full task (9 min) is 1.50 US dollars.
+keywords = melody
+contact_email_on_error = computational.audition+online_running_manu@gmail.com
 organization_name = Max Planck Institute for Empirical Aesthetics
 
 [Database]
@@ -24,8 +26,8 @@ database_size = standard-2
 [Server]
 # Dyno types: hobby, standard-1x, standard-2x, performance-m, performance-l, probably performance-m is best
 dyno_type = performance-m
-num_dynos_web = 1
+num_dynos_web = 2
 num_dynos_worker = 1
-redis_size = premium-0
+redis_size = premium-3
 host = 0.0.0.0
 clock_on = true

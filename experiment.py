@@ -18,19 +18,15 @@ from .melodies import convert_interval_sequence_to_absolute_pitches, sample_refe
 
 from .consent import consent  # TODO: use my Oxford consent here whean ready
 from .instructions import instructions
-from .questionnaire import debrief, questionnaire, STOMPR
+from .questionnaire import debrief, questionnaire, STOMPR, TIPI
 from .volume_calibration import volume_calibration
-
-# TODO:
-## 1. long loading time with 25000 melodies
-## 4. add consistency message
 
 
 ##########################################################################################
 # Global
 ##########################################################################################
 TRIALS_PER_PARTICIPANT = 50
-N_REPEAT_TRIALS = 6
+N_REPEAT_TRIALS = 5
 INITIAL_RECRUIT_SIZE = 20
 
 roving_width = 2.5
@@ -60,39 +56,23 @@ TIMBRE = dict(
 ##########################################################################################
 # Stimuli
 ##########################################################################################
-# Set the size and range of the grid
-grid_size = 50
+# Set the size and range of the grid for the stimulus space
+grid_size = 10  # 50
 grid_range = 12
-
-# Generate a grid of x and y values
-x_values = np.linspace(-grid_range, grid_range, grid_size)
-y_values = np.linspace(-grid_range, grid_range, grid_size)
-# Use NumPy's meshgrid function to create a 2D grid of points
-xx, yy = np.meshgrid(x_values, y_values)
-
-# Flatten the grid to create a list of (x, y) coordinate pairs
-intervals = np.vstack([xx.ravel(), yy.ravel()]).T
-
-##
-# plot
-# import matplotlib.pyplot as plt
-# plt.scatter(intervals[:, 0], intervals[:, 1], s=0.1)
-# plt.show()
-##
 
 # Here we define the stimulus set in an analogous way to the static_audio demo,
 # except we randomise the start_frequency from a continuous range.
 nodes = [
     StaticNode(
         definition={
-            "intervals": interval,
-            # "x": x,
-            # "y": y,
+            # "intervals": interval,
+            "x_int": x,
+            "y_int": y,
         },
     )
-    # for x in np.linspace(-grid_range, grid_range, grid_size)
-    # for y in np.linspace(-grid_range, grid_range, grid_size)
-    for interval in intervals
+    for x in np.linspace(-grid_range, grid_range, grid_size)
+    for y in np.linspace(-grid_range, grid_range, grid_size)
+    # for interval in intervals
 ]
 
 
@@ -106,8 +86,12 @@ class RatingTrial(StaticTrial):
             roving_width,
         )
         definition["reference_pitch"] = reference_pitch
+
+        intervals = [definition["x_int"], definition["y_int"]]
+        definition["intervals"] = intervals
+
         definition["pitches"] = convert_interval_sequence_to_absolute_pitches(
-                intervals=definition["intervals"],
+                intervals=intervals,
                 reference_pitch=reference_pitch,
                 reference_mode="previous_note",
             )
@@ -185,10 +169,6 @@ class Exp(psynet.experiment.Experiment):
             "This experiment requires you to wear headphones. Please ensure you have plugged yours in now.",
             time_estimate=3,
         ),
-        InfoPage(
-            "Next, we would like to ask you some questions about your music preferneces",
-            time_estimate=3,
-        ),
         volume_calibration(TIMBRE, note_duration_tonejs, note_silence_tonejs),
         InfoPage(
             """
@@ -211,10 +191,13 @@ class Exp(psynet.experiment.Experiment):
             n_repeat_trials=N_REPEAT_TRIALS,
             balance_across_nodes=True,
             target_n_participants=50,
-            check_performance_at_end=False,
+            check_performance_at_end=True,
         ),
         questionnaire(),
+        InfoPage("Next, we would like to ask you some questions about your music preferences (0.15 extra bonus)", time_estimate=3),
         STOMPR(),
+        InfoPage("Finally, we would like to ask you some questions about your personality (0.15 extra bonus)", time_estimate=3),
+        TIPI(),
         # debrief(),
         SuccessfulEndPage(),
     )

@@ -5,7 +5,7 @@ from psynet.demography.general import Age, Gender
 from psynet.demography.gmsi import GMSI
 from psynet.modular_page import ModularPage, TextControl, SurveyJSControl
 from psynet.page import InfoPage
-from psynet.timeline import join
+from psynet.timeline import join, FailedValidation
 
 
 def introduction():
@@ -15,7 +15,7 @@ def introduction():
             "Congratulations, you completed the listening part of this experiment!"
         )
         tags.p(
-            "Before we finish, we just have a few more questions to ask you. ",
+            "Before we finish, we would like to ask you a few questions about you. ",
             "They should only take a couple of minutes to complete.",
         )
     return InfoPage(html, time_estimate=10)
@@ -31,21 +31,48 @@ def questionnaire():
     )
 
 
-rating_values = [
-    {"value": "1", "text": "1"},
+STOMPR_rating_values = [
+    {"value": "1", "text": "1 (Dislike Strongly)"},
     {"value": "2", "text": "2"},
     {"value": "3", "text": "3"},
     {"value": "4", "text": "4"},
     {"value": "5", "text": "5"},
     {"value": "6", "text": "6"},
-    {"value": "7", "text": "7"}
+    {"value": "7", "text": "7 (Like Strongly)"}
+]
+
+music_genres = [
+    {"value": "Alternative", "text": "Alternative"},
+    {"value": "Bluegrass", "text": "Bluegrass"},
+    {"value": "Blues", "text": "Blues"},
+    {"value": "Classical", "text": "Classical"},
+    {"value": "Country", "text": "Country"},
+    {"value": "Dance/Electronica", "text": "Dance/Electronica"},
+    {"value": "Folk", "text": "Folk"},
+    {"value": "Funk", "text": "Funk"},
+    {"value": "Gospel", "text": "Gospel"},
+    {"value": "Heavy Metal", "text": "Heavy Metal"},
+    {"value": "World", "text": "World"},
+    {"value": "Jazz", "text": "Jazz"},
+    {"value": "New Age", "text": "New Age"},
+    {"value": "Oldies", "text": "Oldies"},
+    {"value": "Opera", "text": "Opera"},
+    {"value": "Pop", "text": "Pop"},
+    {"value": "Punk", "text": "Punk"},
+    {"value": "Rap/hip-hop", "text": "Rap/hip-hop"},
+    {"value": "Reggae", "text": "Reggae"},
+    {"value": "Religious", "text": "Religious"},
+    {"value": "Rock", "text": "Rock"},
+    {"value": "Soul/R&B", "text": "Soul/R&B"},
+    {"value": "Soundtracks/theme song", "text": "Soundtracks/theme song"}
 ]
 
 
-def STOMPR():
-    return ModularPage(
+class STOMPR(ModularPage):
+    def __init__(self):
+        super().__init__(
             "stompr",
-            "Please indicate your basic preference for each of the following genres using the scale provided.",
+            "Rate your preferences for each music genre on a scale from 1 (Dislike Strongly) to 7 (Like Strongly). You will earn 0.15 dollars.",
             SurveyJSControl(
                 {
                     "logoPosition": "right",
@@ -54,225 +81,90 @@ def STOMPR():
                             "name": "page1",
                             "elements": [
                                 {
-                                    "type": "rating",
-                                    "name": "Alternative",
+                                    "type": "matrix",
+                                    "name": "STOMPR_choices",
+                                    "title": "Please indicate your basic preference for each of the following genres using the scale provided.",
                                     "isRequired": True,
-                                    "title": "Please indicate your preference for Alternative music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Bluegrass",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Bluegrass music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Blues",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Blues music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Classical",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Classical music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Country",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Country music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Dance",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Dance/Electronica music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Folk",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Folk music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Funk",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Funk music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Gospel",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Gospel music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "HeavyMetal",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Heavy Metal music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "World",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for World music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Jazz",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Jazz music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                            ],
-                        },
-                        {
-                            "name": "page2",
-                            "elements": [
-                                {
-                                    "type": "rating",
-                                    "name": "New Age",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for New Age music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Oldies",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Oldies music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Opera",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Opera music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Pop",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Pop music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Punk",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Punk music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Rap",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for  Rap/hip-hop music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Reggae",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Reggae music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Religious",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Religious music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Rock",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Rock music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Soul",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Soul/R&B music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
-                                },
-                                {
-                                    "type": "rating",
-                                    "name": "Soundtracks",
-                                    "isRequired": True,
-                                    "title": "Please indicate your preference for Soundtracks/theme song music:",
-                                    "rateValues": rating_values,
-                                    "minRateDescription": "Dislike Strongly",
-                                    "maxRateDescription": "Like Strongly",
+                                    "columns": STOMPR_rating_values,
+                                    "rows": music_genres,
                                 },
                             ],
                         },
                     ],
                 },
             ),
-            time_estimate=5,
+            time_estimate=55,
             bot_response=lambda: {"rating": "5",},
         )
+
+    def validate(self, response, **kwargs):
+        n_responses = len(response.answer["STOMPR_choices"])
+
+        if n_responses < len(music_genres):
+            return FailedValidation("Please answer all the questions.")
+
+        return None
+
+
+TIPI_rating_values = [
+    {"value": "1", "text": "1 (Disagree Strongly)"},
+    {"value": "2", "text": "2"},
+    {"value": "3", "text": "3"},
+    {"value": "4", "text": "4"},
+    {"value": "5", "text": "5"},
+    {"value": "6", "text": "6"},
+    {"value": "7", "text": "7 (Agree Strongly)"}
+]
+
+tipi_genres = [
+    {"value": "Extraverted", "text": "Extraverted, enthusiastic"},
+    {"value": "Critical", "text": "Critical, quarrelsome."},
+    {"value": "Dependable", "text": "Dependable, self-disciplined."},
+    {"value": "Anxious", "text": "Anxious, easily upset."},
+    {"value": "Open", "text": "Open to new experiences, complex."},
+    {"value": "Reserved", "text": "Reserved, quiet."},
+    {"value": "Sympathetic", "text": "Sympathetic, warm."},
+    {"value": "Disorganized", "text": "Disorganized, careless."},
+    {"value": "Calm", "text": "Calm, emotionally stable."},
+    {"value": "Conventional", "text": "Conventional, uncreative."},
+]
+
+class TIPI(ModularPage):
+    def __init__(self):
+        super().__init__(
+            "tipi",
+            "Here are a number of personality traits that may or may not apply to you. Please rate each statement to indicate the extent to which you agree/ disagree with them on a scale from 1 (Disagree Strongly) to 7 (Agree Strongly). You will earn 0.15 dollars.",
+            SurveyJSControl(
+                {
+                    "logoPosition": "right",
+                    "pages": [
+                        {
+                            "name": "page1",
+                            "elements": [
+                                {
+                                    "type": "matrix",
+                                    "name": "TIPI_choices",
+                                    "title": "I see myself as:",
+                                    "isRequired": True,
+                                    "columns": TIPI_rating_values,
+                                    "rows": tipi_genres,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ),
+            time_estimate=55,
+            bot_response=lambda: {"rating": "5",},
+        )
+
+    def validate(self, response, **kwargs):
+        n_responses = len(response.answer["TIPI_choices"])
+
+        if n_responses < len(tipi_genres):
+            return FailedValidation("Please answer all the questions.")
+
+        return None
 
 
 def feedback():
@@ -282,7 +174,7 @@ def feedback():
         TextControl(one_line=False),
         bot_response="I am just a bot, I don't have any feedback for you.",
         save_answer="feedback",
-        time_estimate=20,
+        time_estimate=5,
     )
 
 
