@@ -25,8 +25,10 @@ from .volume_calibration import volume_calibration
 ##########################################################################################
 # Global
 ##########################################################################################
-TRIALS_PER_PARTICIPANT = 50
-N_REPEAT_TRIALS = 5
+# Set the size and range of the grid for the stimulus space
+NUM_PARTICIPANTS = 100
+
+N_REPEAT_TRIALS = 6
 INITIAL_RECRUIT_SIZE = 20
 
 roving_width = 2.5
@@ -56,12 +58,18 @@ TIMBRE = dict(
 ##########################################################################################
 # Stimuli
 ##########################################################################################
-# Set the size and range of the grid for the stimulus space
-grid_size = 50
-grid_range = 12
-
 # Here we define the stimulus set in an analogous way to the static_audio demo,
 # except we randomise the start_frequency from a continuous range.
+
+# TODO: Kevin, we just want to use integer semitones, and make sure the trials per particiapnt is right
+# TODO: 120 trials maximum
+
+grid_size = 15
+grid_range = 7
+
+TRIALS_PER_PARTICIPANT = grid_size * grid_size  # TODO: this calculation is wrong
+
+
 nodes = [
     StaticNode(
         definition={
@@ -93,7 +101,7 @@ class RatingTrial(StaticTrial):
         definition["pitches"] = convert_interval_sequence_to_absolute_pitches(
                 intervals=intervals,
                 reference_pitch=reference_pitch,
-                reference_mode="previous_note",
+                reference_mode="previous_note",   # pitch mode
             )
         return definition
 
@@ -169,16 +177,16 @@ class Exp(psynet.experiment.Experiment):
             "This experiment requires you to wear headphones. Please ensure you have plugged yours in now.",
             time_estimate=3,
         ),
-        volume_calibration(TIMBRE, note_duration_tonejs, note_silence_tonejs),
-        InfoPage(
-            """
-            We will now perform a short listening test to verify that your audio is working properly.
-            This test will be difficult to pass unless you listen carefully over your headphones.
-            Press 'Next' when you are ready to start.
-            """,
-            time_estimate=5,
-        ),
-        AntiphaseHeadphoneTest(),
+        # volume_calibration(TIMBRE, note_duration_tonejs, note_silence_tonejs),
+        # InfoPage(
+        #     """
+        #     We will now perform a short listening test to verify that your audio is working properly.
+        #     This test will be difficult to pass unless you listen carefully over your headphones.
+        #     Press 'Next' when you are ready to start.
+        #     """,
+        #     time_estimate=5,
+        # ),
+        # AntiphaseHeadphoneTest(),
         instructions(),
         RatingTrialMaker(
             id_="rating_main_experiment",
@@ -190,7 +198,7 @@ class Exp(psynet.experiment.Experiment):
             allow_repeated_nodes=False,
             n_repeat_trials=N_REPEAT_TRIALS,
             balance_across_nodes=True,
-            target_n_participants=50,
+            target_n_participants=NUM_PARTICIPANTS,
             check_performance_at_end=True,
         ),
         questionnaire(),
